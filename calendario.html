@@ -7,9 +7,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --color-brown-header: #7E4F42; /* Nuevo color principal */
-      --color-numbers: #7E4F42;      /* Números del calendario */
-      --color-muted: #D6C5C1;        /* Días fuera del mes actual */
+      --color-brown-header: #996b5f; /* Nuevo color principal */
+      --color-numbers: #996b5f;      /* Color de los números */
+      --color-muted: #decbc7;        /* Días fuera del mes actual */
       --color-bg: #FFFFFF;
     }
 
@@ -105,7 +105,7 @@
       background-color: var(--color-brown-header);
       color: #ffffff !important;
       border-radius: 50%;
-      box-shadow: 0 2px 6px rgba(126, 79, 66, 0.4);
+      box-shadow: 0 2px 6px rgba(153, 107, 95, 0.4);
     }
   </style>
 </head>
@@ -149,12 +149,14 @@
       title.innerText = `${monthNames[month]} ${year}`;
       daysContainer.innerHTML = "";
 
+      // Ajuste para comenzar en Lunes (0) y terminar en Domingo (6)
       const firstDay = new Date(year, month, 1).getDay();
       const startingDay = (firstDay + 6) % 7;
 
       const totalDays = new Date(year, month + 1, 0).getDate();
       const prevMonthDays = new Date(year, month, 0).getDate();
 
+      // Días del mes anterior
       for (let i = startingDay - 1; i >= 0; i--) {
         const dayDiv = document.createElement("div");
         dayDiv.classList.add("day", "other-month");
@@ -162,6 +164,7 @@
         daysContainer.appendChild(dayDiv);
       }
 
+      // Días del mes actual
       const realToday = new Date();
       for (let i = 1; i <= totalDays; i++) {
         const dayDiv = document.createElement("div");
@@ -179,6 +182,7 @@
         daysContainer.appendChild(dayDiv);
       }
 
+      // Días del siguiente mes para rellenar la cuadrícula
       const totalRendered = startingDay + totalDays;
       const nextDaysCount = (7 - (totalRendered % 7)) % 7;
 
