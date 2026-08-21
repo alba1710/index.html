@@ -17,10 +17,11 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      width: 100vw;
+      height: 100vh;
       color: #3E241E;
-      padding: 4px;
       overflow: hidden;
+      padding: 0;
     }
 
     .widget-container {
@@ -28,44 +29,42 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: transparent;
-      border: none;
-      box-shadow: none;
-      padding: 0;
       width: 100%;
       height: 100%;
+      padding: 2px;
     }
 
-    /* Esfera ampliada y altamente responsiva */
+    /* El reloj ocupa automáticamente el máximo espacio posible sin salirse */
     .clock-svg {
-      width: clamp(180px, 68vmin, 300px);
-      height: clamp(180px, 68vmin, 300px);
+      width: min(92vw, calc(100vh - 58px));
+      height: min(92vw, calc(100vh - 58px));
       display: block;
     }
 
     .info-display {
-      margin-top: clamp(10px, 3.5vmin, 16px);
+      margin-top: 6px;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 3px;
+      gap: 2px;
+      flex-shrink: 0;
     }
 
     .date-text {
-      font-size: clamp(0.95rem, 4vmin, 1.2rem);
+      font-size: clamp(0.85rem, 4vw, 1.15rem);
       font-weight: 600;
       color: #7E4F42;
       letter-spacing: 0.2px;
-      line-height: 1.2;
+      line-height: 1.15;
     }
 
     .time-digital {
-      font-size: clamp(1.2rem, 5.2vmin, 1.6rem);
+      font-size: clamp(1.1rem, 5.5vw, 1.5rem);
       font-weight: 700;
       color: #A67264;
-      letter-spacing: 1px;
-      line-height: 1.2;
+      letter-spacing: 0.8px;
+      line-height: 1.15;
     }
   </style>
 </head>
