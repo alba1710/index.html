@@ -19,7 +19,7 @@
       align-items: center;
       min-height: 100vh;
       color: #3E241E;
-      padding: 8px;
+      padding: 4px;
       overflow: hidden;
     }
 
@@ -36,24 +36,24 @@
       height: 100%;
     }
 
-    /* Tamaño escalable: se ajusta suavemente si estiras o encoges el bloque */
+    /* Esfera ampliada y altamente responsiva */
     .clock-svg {
-      width: clamp(100px, 42vmin, 165px);
-      height: clamp(100px, 42vmin, 165px);
+      width: clamp(180px, 68vmin, 300px);
+      height: clamp(180px, 68vmin, 300px);
       display: block;
     }
 
     .info-display {
-      margin-top: clamp(6px, 2.5vmin, 12px);
+      margin-top: clamp(10px, 3.5vmin, 16px);
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2px;
+      gap: 3px;
     }
 
     .date-text {
-      font-size: clamp(0.75rem, 3.2vmin, 0.88rem);
+      font-size: clamp(0.95rem, 4vmin, 1.2rem);
       font-weight: 600;
       color: #7E4F42;
       letter-spacing: 0.2px;
@@ -61,10 +61,10 @@
     }
 
     .time-digital {
-      font-size: clamp(0.95rem, 4vmin, 1.15rem);
+      font-size: clamp(1.2rem, 5.2vmin, 1.6rem);
       font-weight: 700;
       color: #A67264;
-      letter-spacing: 0.8px;
+      letter-spacing: 1px;
       line-height: 1.2;
     }
   </style>
@@ -74,25 +74,25 @@
   <div class="widget-container">
     <svg class="clock-svg" viewBox="0 0 300 300">
       <!-- Esfera -->
-      <circle cx="150" cy="150" r="140" fill="#F4ECE9" stroke="#7E4F42" stroke-width="3" />
+      <circle cx="150" cy="150" r="140" fill="#F4ECE9" stroke="#7E4F42" stroke-width="3.5" />
       <circle cx="150" cy="150" r="132" fill="#FFFFFF" />
 
-      <!-- Marcas horarias (12 marcas clásicas) -->
+      <!-- Marcas horarias -->
       <g id="ticks"></g>
 
       <!-- Manecilla de Horas -->
       <g id="hour-group">
-        <line x1="150" y1="150" x2="150" y2="92" stroke="#7E4F42" stroke-width="5" stroke-linecap="round" />
+        <line x1="150" y1="150" x2="150" y2="92" stroke="#7E4F42" stroke-width="5.5" stroke-linecap="round" />
       </g>
 
       <!-- Manecilla de Minutos -->
       <g id="minute-group">
-        <line x1="150" y1="150" x2="150" y2="48" stroke="#A67264" stroke-width="3.5" stroke-linecap="round" />
+        <line x1="150" y1="150" x2="150" y2="48" stroke="#A67264" stroke-width="3.8" stroke-linecap="round" />
       </g>
 
       <!-- Eje central -->
-      <circle cx="150" cy="150" r="7" fill="#7E4F42" />
-      <circle cx="150" cy="150" r="2.5" fill="#FFFFFF" />
+      <circle cx="150" cy="150" r="7.5" fill="#7E4F42" />
+      <circle cx="150" cy="150" r="2.8" fill="#FFFFFF" />
     </svg>
 
     <!-- Información inferior -->
@@ -124,7 +124,7 @@
       line.setAttribute("y2", y2);
       line.setAttribute("stroke", "#7E4F42");
       line.setAttribute("stroke-linecap", "round");
-      line.setAttribute("stroke-width", isCardinal ? "3.5" : "2");
+      line.setAttribute("stroke-width", isCardinal ? "3.8" : "2.2");
       line.setAttribute("opacity", isCardinal ? "1" : "0.55");
       ticksContainer.appendChild(line);
     }
