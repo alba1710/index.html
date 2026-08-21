@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reloj Notion</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #3E241E;
+      padding: 8px;
+      overflow: hidden;
+    }
+
+    .widget-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Tamaño escalable: se ajusta suavemente si estiras o encoges el bloque */
+    .clock-svg {
+      width: clamp(100px, 42vmin, 165px);
+      height: clamp(100px, 42vmin, 165px);
+      display: block;
+    }
+
+    .info-display {
+      margin-top: clamp(6px, 2.5vmin, 12px);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .date-text {
+      font-size: clamp(0.75rem, 3.2vmin, 0.88rem);
+      font-weight: 600;
+      color: #7E4F42;
+      letter-spacing: 0.2px;
+      line-height: 1.2;
+    }
+
+    .time-digital {
+      font-size: clamp(0.95rem, 4vmin, 1.15rem);
+      font-weight: 700;
+      color: #A67264;
+      letter-spacing: 0.8px;
+      line-height: 1.2;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="widget-container">
+    <svg class="clock-svg" viewBox="0 0 300 300">
+      <!-- Esfera -->
+      <circle cx="150" cy="150" r="140" fill="#F4ECE9" stroke="#7E4F42" stroke-width="3" />
+      <circle cx="150" cy="150" r="132" fill="#FFFFFF" />
+
+      <!-- Marcas horarias (12 marcas clásicas) -->
+      <g id="ticks"></g>
+
+      <!-- Manecilla de Horas -->
+      <g id="hour-group">
+        <line x1="150" y1="150" x2="150" y2="92" stroke="#7E4F42" stroke-width="5" stroke-linecap="round" />
+      </g>
+
+      <!-- Manecilla de Minutos -->
+      <g id="minute-group">
+        <line x1="150" y1="150" x2="150" y2="48" stroke="#A67264" stroke-width="3.5" stroke-linecap="round" />
+      </g>
+
+      <!-- Eje central -->
+      <circle cx="150" cy="150" r="7" fill="#7E4F42" />
+      <circle cx="150" cy="150" r="2.5" fill="#FFFFFF" />
+    </svg>
+
+    <!-- Información inferior -->
+    <div class="info-display">
+      <div class="date-text" id="date">--</div>
+      <div class="time-digital" id="time-digital">--:--</div>
+    </div>
+  </div>
+
+  <script>
+    const ticksContainer = document.getElementById('ticks');
+    for (let i = 1; i <= 12; i++) {
+      const angleDeg = i * 30;
+      const angleRad = (angleDeg - 90) * (Math.PI / 180);
+
+      const isCardinal = i % 3 === 0;
+      const tickInner = isCardinal ? 114 : 122;
+      const tickOuter = 132;
+
+      const x1 = 150 + tickInner * Math.cos(angleRad);
+      const y1 = 150 + tickInner * Math.sin(angleRad);
+      const x2 = 150 + tickOuter * Math.cos(angleRad);
+      const y2 = 150 + tickOuter * Math.sin(angleRad);
+
+      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      line.setAttribute("x1", x1);
+      line.setAttribute("y1", y1);
+      line.setAttribute("x2", x2);
+      line.setAttribute("y2", y2);
+      line.setAttribute("stroke", "#7E4F42");
+      line.setAttribute("stroke-linecap", "round");
+      line.setAttribute("stroke-width", isCardinal ? "3.5" : "2");
+      line.setAttribute("opacity", isCardinal ? "1" : "0.55");
+      ticksContainer.appendChild(line);
+    }
+
+    function updateClock() {
+      const now = new Date();
+
+      const parts = new Intl.DateTimeFormat('es-ES', {
+        timeZone: 'Europe/Madrid',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+        hourCycle: 'h23'
+      }).formatToParts(now);
+
+      let h = 0, m = 0, s = 0;
+      for (const p of parts) {
+        if (p.type === 'hour') h = parseInt(p.value, 10);
+        if (p.type === 'minute') m = parseInt(p.value, 10);
+        if (p.type === 'second') s = parseInt(p.value, 10);
+      }
+
+      const hour12 = h % 12;
+      const hourDeg = (hour12 + m / 60 + s / 3600) * 30;
+      const minuteDeg = (m + s / 60) * 6;
+
+      document.getElementById('hour-group').setAttribute('transform', `rotate(${hourDeg}, 150, 150)`);
+      document.getElementById('minute-group').setAttribute('transform', `rotate(${minuteDeg}, 150, 150)`);
+
+      const dateOptions = {
+        timeZone: 'Europe/Madrid',
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long'
+      };
+      const formattedDate = new Intl.DateTimeFormat('es-ES', dateOptions).format(now);
+      document.getElementById('date').textContent = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+
+      const hh = String(h).padStart(2, '0');
+      const mm = String(m).padStart(2, '0');
+      document.getElementById('time-digital').textContent = `${hh}:${mm}`;
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+</body>
+</html>
