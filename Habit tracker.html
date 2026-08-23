@@ -35,29 +35,29 @@
       color: var(--text-main);
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
+      padding: 4px;
       min-height: 100vh;
-      padding: 1rem;
     }
 
-    /* Contenedor compacto */
+    /* Contenedor ultra-compacto adaptado a columnas de Notion */
     .habit-widget {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 1.1rem;
+      border-radius: 16px;
+      padding: 0.65rem;
       width: 100%;
-      max-width: 350px;
-      box-shadow: 0 4px 20px rgba(134, 93, 82, 0.08);
+      max-width: 100%;
+      box-shadow: 0 2px 10px rgba(134, 93, 82, 0.05);
     }
 
     /* Filas de hábitos */
     .habit-card {
       background: var(--item-bg);
       border: 1px solid var(--item-border);
-      border-radius: 14px;
-      padding: 0.7rem 0.8rem;
-      margin-bottom: 0.6rem;
+      border-radius: 10px;
+      padding: 0.5rem 0.55rem;
+      margin-bottom: 0.45rem;
     }
 
     .habit-card:last-child {
@@ -68,27 +68,27 @@
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.35rem;
     }
 
     .habit-title {
-      font-size: 0.88rem;
+      font-size: 0.78rem;
       font-weight: 700;
       color: var(--text-main);
     }
 
     .habit-stat {
-      font-size: 0.75rem;
+      font-size: 0.68rem;
       font-weight: 600;
       color: var(--text-stat);
     }
 
-    /* Días circulares */
+    /* Días circulares reducidos para evitar desbordes */
     .days-row {
       display: flex;
       justify-content: space-between;
-      gap: 0.25rem;
-      margin-bottom: 0.55rem;
+      gap: 2px;
+      margin-bottom: 0.4rem;
     }
 
     .day-item {
@@ -96,37 +96,37 @@
     }
 
     .day-circle {
-      width: 28px;
-      height: 28px;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
       background: var(--circle-inactive);
       color: var(--circle-inactive-text);
-      font-size: 0.72rem;
+      font-size: 0.65rem;
       font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       user-select: none;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.15s ease;
     }
 
     .day-circle:hover {
-      transform: scale(1.08);
+      transform: scale(1.06);
       background: #ebdcd8;
     }
 
     .day-item:checked + .day-circle {
       background: var(--primary);
       color: #ffffff;
-      box-shadow: 0 2px 8px rgba(134, 93, 82, 0.35);
-      transform: scale(1.05);
+      box-shadow: 0 1px 4px rgba(134, 93, 82, 0.3);
+      transform: scale(1.04);
     }
 
     /* Barra de progreso */
     .progress-track {
       background: var(--bar-bg);
-      height: 6px;
+      height: 4px;
       border-radius: 999px;
       overflow: hidden;
     }
@@ -136,7 +136,7 @@
       height: 100%;
       width: 0%;
       border-radius: 999px;
-      transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: width 0.3s ease;
     }
 
     .progress-fill.completed {
@@ -147,16 +147,16 @@
     .footer-action {
       display: flex;
       justify-content: center;
-      margin-top: 0.9rem;
+      margin-top: 0.6rem;
     }
 
     .btn-reset {
       background: transparent;
       border: 1px solid var(--primary-light);
       color: var(--primary);
-      font-size: 0.75rem;
+      font-size: 0.68rem;
       font-weight: 600;
-      padding: 0.35rem 0.9rem;
+      padding: 0.25rem 0.65rem;
       border-radius: 999px;
       cursor: pointer;
       transition: all 0.2s;
@@ -227,7 +227,7 @@
         card.innerHTML = `
           <div class="habit-top">
             <span class="habit-title">${habit.name}</span>
-            <span class="habit-stat" id="stat_${habit.id}">${count}/${habit.target} días (${percent}%)</span>
+            <span class="habit-stat" id="stat_${habit.id}">${count}/${habit.target} (${percent}%)</span>
           </div>
           <div class="days-row">${daysHtml}</div>
           <div class="progress-track">
@@ -258,7 +258,7 @@
       const bar = document.getElementById(`bar_${habitId}`);
       const stat = document.getElementById(`stat_${habitId}`);
 
-      stat.textContent = `${count}/${habit.target} días (${percent}%)`;
+      stat.textContent = `${count}/${habit.target} (${percent}%)`;
       bar.style.width = `${percent}%`;
 
       if (count >= habit.target) {
