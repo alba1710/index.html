@@ -41,7 +41,6 @@
       overflow-x: hidden;
     }
 
-    /* Contenedor fluido con soporte para Container Queries */
     .habit-widget {
       container-type: inline-size;
       background: var(--card-bg);
@@ -52,13 +51,12 @@
       max-width: 100%;
     }
 
-    /* Filas de hábitos */
     .habit-card {
       background: var(--item-bg);
       border: 1px solid var(--item-border);
       border-radius: 10px;
-      padding: clamp(5px, 2cqi, 8px);
-      margin-bottom: clamp(4px, 1.5cqi, 6px);
+      padding: clamp(6px, 2.2cqi, 9px);
+      margin-bottom: clamp(5px, 1.8cqi, 7px);
       overflow: hidden;
     }
 
@@ -69,13 +67,14 @@
     .habit-top {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: clamp(3px, 1.2cqi, 5px);
+      align-items: baseline;
+      margin-bottom: clamp(4px, 1.4cqi, 6px);
       gap: 4px;
     }
 
+    /* Título más grande y visible */
     .habit-title {
-      font-size: clamp(0.65rem, 3.8cqi, 0.8rem);
+      font-size: clamp(0.78rem, 4.4cqi, 0.94rem);
       font-weight: 700;
       color: var(--text-main);
       white-space: nowrap;
@@ -84,19 +83,39 @@
     }
 
     .habit-stat {
-      font-size: clamp(0.58rem, 3.2cqi, 0.7rem);
+      font-size: clamp(0.62rem, 3.4cqi, 0.74rem);
       font-weight: 600;
       color: var(--text-stat);
       white-space: nowrap;
       flex-shrink: 0;
     }
 
-    /* Cuadrícula de 7 columnas exactas: jamás se sale del recuadro */
+    /* Barra de progreso más gruesa situada arriba de los días */
+    .progress-track {
+      background: var(--bar-bg);
+      height: 7px;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: clamp(6px, 2cqi, 8px);
+    }
+
+    .progress-fill {
+      background: var(--bar-fill);
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    .progress-fill.completed {
+      background: var(--bar-complete);
+    }
+
+    /* Cuadrícula de días situada debajo */
     .days-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: clamp(2px, 1cqi, 4px);
-      margin-bottom: clamp(3px, 1.2cqi, 6px);
       width: 100%;
     }
 
@@ -114,7 +133,7 @@
     .day-circle {
       width: 100%;
       max-width: 26px;
-      aspect-ratio: 1 / 1; /* Círculo perfecto automático */
+      aspect-ratio: 1 / 1;
       border-radius: 50%;
       background: var(--circle-inactive);
       color: var(--circle-inactive-text);
@@ -138,27 +157,6 @@
       box-shadow: 0 1px 4px rgba(134, 93, 82, 0.35);
     }
 
-    /* Barra de progreso */
-    .progress-track {
-      background: var(--bar-bg);
-      height: 4px;
-      border-radius: 999px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      background: var(--bar-fill);
-      height: 100%;
-      width: 0%;
-      border-radius: 999px;
-      transition: width 0.3s ease;
-    }
-
-    .progress-fill.completed {
-      background: var(--bar-complete);
-    }
-
-    /* Botón inferior */
     .footer-action {
       display: flex;
       justify-content: center;
@@ -239,15 +237,16 @@
 
         const isCompletedClass = count >= habit.target ? "completed" : "";
 
+        // Estructura: Título y stats -> Barra de progreso gruesa -> Días debajo
         card.innerHTML = `
           <div class="habit-top">
             <span class="habit-title">${habit.name}</span>
             <span class="habit-stat" id="stat_${habit.id}">${count}/${habit.target} (${percent}%)</span>
           </div>
-          <div class="days-grid">${daysHtml}</div>
           <div class="progress-track">
             <div class="progress-fill ${isCompletedClass}" id="bar_${habit.id}" style="width: ${percent}%;"></div>
           </div>
+          <div class="days-grid">${daysHtml}</div>
         `;
         container.appendChild(card);
       });
