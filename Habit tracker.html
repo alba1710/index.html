@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Widget de Hábitos</title>
+  <style>
+    :root {
+      --bg-dark: #1b1210;
+      --card-bg: #291c19;
+      --card-border: #442f2b;
+      --primary: #865d52;
+      --primary-light: #a47467;
+      --primary-accent: #c48e80;
+      --circle-inactive: #3d2a26;
+      --circle-inactive-text: #a8918a;
+      --text-main: #fcf8f6;
+      --text-muted: #bda69f;
+      --bar-bg: #3a2723;
+      --bar-fill: linear-gradient(90deg, #865d52, #c48e80);
+      --bar-complete: linear-gradient(90deg, #9e6454, #d98873);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    /* Contenedor compacto del Widget */
+    .habit-widget {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 1.25rem;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
+    }
+
+    .widget-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .header-info h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.2px;
+    }
+
+    .header-info span {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .btn-reset {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-reset:hover {
+      background: var(--circle-inactive);
+      color: var(--text-main);
+      border-color: var(--primary);
+    }
+
+    /* Filas de hábitos */
+    .habit-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 14px;
+      padding: 0.75rem 0.85rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .habit-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .habit-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.5rem;
+    }
+
+    .habit-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .habit-stat {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--primary-accent);
+    }
+
+    /* Días circulares */
+    .days-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.25rem;
+      margin-bottom: 0.55rem;
+    }
+
+    .day-item {
+      display: none;
+    }
+
+    .day-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--circle-inactive);
+      color: var(--circle-inactive-text);
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .day-circle:hover {
+      transform: scale(1.08);
+      background: #4d3631;
+    }
+
+    .day-item:checked + .day-circle {
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(134, 93, 82, 0.45);
+      transform: scale(1.05);
+    }
+
+    /* Barra de progreso */
+    .progress-track {
+      background: var(--bar-bg);
+      height: 6px;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      background: var(--bar-fill);
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .progress-fill.completed {
+      background: var(--bar-complete);
+      box-shadow: 0 0 8px rgba(196, 142, 128, 0.5);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="habit-widget">
+    <div class="widget-header">
+      <div class="header-info">
+        <h2>Mis Hábitos</h2>
+        <span id="global-subtitle">Progreso semanal</span>
+      </div>
+      <button class="btn-reset" onclick="resetWeek()">Reiniciar</button>
+    </div>
+
+    <div id="habits-list"></div>
+  </div>
+
+  <script>
+    // Configuración de hábitos y metas de días
+    const habitsData = [
+      { id: "leer", name: "Leer 20 min", target: 5 },
+      { id: "comer", name: "Comer sano", target: 6 },
+      { id: "ejercicio", name: "Ejercicio", target: 5 },
+      { id: "agua", name: "2 L agua", target: 7 }
+    ];
+
+    const days = ["L", "M", "X", "J", "V", "S", "D"];
+    const container = document.getElementById("habits-list");
+
+    // Cargar datos guardados de localStorage
+    function getStoredData() {
+      const saved = localStorage.getItem("weekly_habits_tracker");
+      return saved ? JSON.parse(saved) : {};
+    }
+
+    function saveState(state) {
+      localStorage.setItem("weekly_habits_tracker", JSON.stringify(state));
+    }
+
+    function renderWidget() {
+      const state = getStoredData();
+      container.innerHTML = "";
+
+      habitsData.forEach((habit, hIdx) => {
+        const habitChecked = state[habit.id] || [];
+        const count = habitChecked.length;
+        const percent = Math.min(100, Math.round((count / habit.target) * 100));
+
+        const card = document.createElement("div");
+        card.className = "habit-card";
+
+        // Render círculos de los días
+        const daysHtml = days.map((day, dIdx) => {
+          const isChecked = habitChecked.includes(dIdx) ? "checked" : "";
+          return `
+            <label>
+              <input type="checkbox" class="day-item" id="chk_${habit.id}_${dIdx}" 
+                     ${isChecked} onchange="toggleDay('${habit.id}', ${dIdx})">
+              <span class="day-circle">${day}</span>
+            </label>
+          `;
+        }).join("");
+
+        const isCompletedClass = count >= habit.target ? "completed" : "";
+
+        card.innerHTML = `
+          <div class="habit-top">
+            <span class="habit-title">${habit.name}</span>
+            <span class="habit-stat" id="stat_${habit.id}">${count}/${habit.target} días (${percent}%)</span>
+          </div>
+          <div class="days-row">${daysHtml}</div>
+          <div class="progress-track">
+            <div class="progress-fill ${isCompletedClass}" id="bar_${habit.id}" style="width: ${percent}%;"></div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function toggleDay(habitId, dayIndex) {
+      const state = getStoredData();
+      if (!state[habitId]) state[habitId] = [];
+
+      const index = state[habitId].indexOf(dayIndex);
+      if (index === -1) {
+        state[habitId].push(dayIndex);
+      } else {
+        state[habitId].splice(index, 1);
+      }
+
+      saveState(state);
+
+      // Actualizar solo el progreso del hábito afectado
+      const habit = habitsData.find(h => h.id === habitId);
+      const count = state[habitId].length;
+      const percent = Math.min(100, Math.round((count / habit.target) * 100));
+
+      const bar = document.getElementById(`bar_${habitId}`);
+      const stat = document.getElementById(`stat_${habitId}`);
+
+      stat.textContent = `${count}/${habit.target} días (${percent}%)`;
+      bar.style.width = `${percent}%`;
+
+      if (count >= habit.target) {
+        bar.classList.add("completed");
+      } else {
+        bar.classList.remove("completed");
+      }
+    }
+
+    function resetWeek() {
+      if (confirm("¿Deseas reiniciar las casillas de toda la semana?")) {
+        localStorage.removeItem("weekly_habits_tracker");
+        renderWidget();
+      }
+    }
+
+    // Inicializar al cargar
+    renderWidget();
+  </script>
+</body>
+</html>
