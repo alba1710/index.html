@@ -18,7 +18,7 @@
       --text-stat: #865d52;
       --bar-bg: #ebdcd8;
       --bar-fill: linear-gradient(90deg, #ab7f74, #865d52);
-      --bar-complete: #5e3f37;
+      --bar-complete: #865d52;
     }
 
     * {
@@ -86,7 +86,6 @@
       text-overflow: ellipsis;
     }
 
-    /* Animación del icono de confeti */
     .confetti-badge {
       display: none;
       font-size: clamp(0.75rem, 3.8cqi, 0.9rem);
@@ -146,10 +145,10 @@
     const CLOUDFLARE_WORKER_URL = "https://habittracker.albaadamerojas.workers.dev/";
 
     const habitsConfig = [
+      { key: "leer", name: "Leer 20 min", target: 4 },
       { key: "comerSano", name: "Comer sano", target: 6 },
-      { key: "leer", name: "Leer", target: 4 },
       { key: "agua", name: "2 L agua", target: 7 },
-      { key: "pasos", name: "Pasos", target: 5 }
+      { key: "pasos", name: "8-10k pasos", target: 5 }
     ];
 
     const container = document.getElementById("habits-list");
@@ -178,6 +177,8 @@
     function updateUI(data) {
       habitsConfig.forEach(habit => {
         const count = data[habit.key] !== undefined ? data[habit.key] : 0;
+        
+        // Porcentaje visual y de texto topado al 100%
         const percent = Math.min(100, Math.round((count / habit.target) * 100));
 
         const statEl = document.getElementById(`stat_${habit.key}`);
