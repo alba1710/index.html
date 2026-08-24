@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Objetivos Semana</title>
+  <style>
+    :root {
+      --bg-card: #FFFFFF;
+      --border-card: #EAE6DF;
+      --divider-color: #7E5F46;
+      --text-header: #84634B;
+      --text-category: #84634B;
+      --btn-border: #DCD6CD;
+      --btn-text: #634E3E;
+      --btn-hover: #F8F5F1;
+      --placeholder-color: #B5AFA7;
+      --text-task: #4A3E36;
+      --check-border: #84634B;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: transparent;
+      padding: 10px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .widget-container {
+      width: 100%;
+      max-width: 310px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 12px;
+      padding: 18px 20px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+    }
+
+    /* Título principal con estilo Serif como Notion */
+    .title {
+      font-family: Lyon-Text, Georgia, "Times New Roman", serif;
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--text-header);
+      margin-bottom: 8px;
+      letter-spacing: -0.2px;
+    }
+
+    /* Línea divisoria */
+    .divider {
+      height: 1px;
+      background-color: var(--divider-color);
+      opacity: 0.8;
+      margin-bottom: 14px;
+    }
+
+    /* Botón Nueva Semana */
+    .btn-new-week {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #FFFFFF;
+      border: 1px solid var(--btn-border);
+      border-radius: 6px;
+      padding: 5px 12px;
+      font-family: Lyon-Text, Georgia, "Times New Roman", serif;
+      font-size: 0.85rem;
+      color: var(--btn-text);
+      cursor: pointer;
+      margin-bottom: 18px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-new-week:hover {
+      background-color: var(--btn-hover);
+      border-color: #C8BDB2;
+    }
+
+    .btn-new-week span {
+      font-size: 1rem;
+      line-height: 1;
+      font-weight: bold;
+    }
+
+    /* Secciones Desplegables */
+    details {
+      margin-bottom: 12px;
+    }
+
+    summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: Lyon-Text, Georgia, "Times New Roman", serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-category);
+      user-select: none;
+      outline: none;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary .arrow {
+      font-size: 0.65rem;
+      transition: transform 0.15s ease;
+      display: inline-block;
+    }
+
+    details[open] summary .arrow {
+      transform: rotate(90deg);
+    }
+
+    /* Lista de tareas y casillas */
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 8px 0 4px 18px;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Casilla de verificación */
+    .checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 15px;
+      height: 15px;
+      border: 1.5px solid var(--check-border);
+      border-radius: 3px;
+      background-color: #FFFFFF;
+      cursor: pointer;
+      display: grid;
+      place-content: center;
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+
+    .checkbox:checked {
+      background-color: var(--check-border);
+    }
+
+    .checkbox:checked::after {
+      content: '';
+      width: 3px;
+      height: 7px;
+      border: solid #FFFFFF;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg) translate(-0.5px, -1px);
+    }
+
+    /* Input de texto */
+    .task-input {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: Lyon-Text, Georgia, "Times New Roman", serif;
+      font-size: 0.88rem;
+      color: var(--text-task);
+      width: 100%;
+    }
+
+    .task-input::placeholder {
+      color: var(--placeholder-color);
+      font-family: Lyon-Text, Georgia, "Times New Roman", serif;
+    }
+
+    .task-input.completed {
+      text-decoration: line-through;
+      color: var(--placeholder-color);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="widget-container">
+    <div class="title">Objetivos semana</div>
+    <div class="divider"></div>
+
+    <button class="btn-new-week" onclick="nuevaSemana()">
+      <span>+</span> Nueva semana
+    </button>
+
+    <!-- Sección Estudiar -->
+    <details open>
+      <summary><span class="arrow">▼</span> Estudiar</summary>
+      <div class="task-list">
+        <div class="task-item">
+          <input type="checkbox" class="checkbox" onchange="toggleTask(this)">
+          <input type="text" class="task-input" placeholder="Tareas pendientes">
+        </div>
+        <div class="task-item">
+          <input type="checkbox" class="checkbox" onchange="toggleTask(this)">
+          <input type="text" class="task-input" placeholder="Tareas pendientes">
+        </div>
+        <div class="task-item">
+          <input type="checkbox" class="checkbox" onchange="toggleTask(this)">
+          <input type="text" class="task-input" placeholder="Tareas pendientes">
+        </div>
+      </div>
+    </details>
+
+    <!-- Sección Personal -->
+    <details open>
+      <summary><span class="arrow">▼</span> Personal</summary>
+      <div class="task-list">
+        <div class="task-item">
+          <input type="checkbox" class="checkbox" onchange="toggleTask(this)">
+          <input type="text" class="task-input" placeholder="Tareas pendientes">
+        </div>
+        <div class="task-item">
+          <input type="checkbox" class="checkbox" onchange="toggleTask(this)">
+          <input type="text" class="task-input" placeholder="Tareas pendientes">
+        </div>
+        <div class="task-item">
+          <input type="checkbox" class="checkbox" onchange="toggleTask(this)">
+          <input type="text" class="task-input" placeholder="Tareas pendientes">
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <script>
+    // Tachar texto al marcar el checkbox
+    function toggleTask(checkbox) {
+      const textInput = checkbox.nextElementSibling;
+      if (checkbox.checked) {
+        textInput.classList.add('completed');
+      } else {
+        textInput.classList.remove('completed');
+      }
+    }
+
+    // Limpiar casillas y textos al pulsar Nueva semana
+    function nuevaSemana() {
+      const inputs = document.querySelectorAll('.task-input');
+      const checkboxes = document.querySelectorAll('.checkbox');
+
+      inputs.forEach(input => {
+        input.value = '';
+        input.classList.remove('completed');
+      });
+
+      checkboxes.forEach(chk => {
+        chk.checked = false;
+      });
+    }
+  </script>
+</body>
+</html>
