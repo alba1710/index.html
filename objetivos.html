@@ -6,10 +6,6 @@
   <title>Objetivos Semana</title>
   <style>
     :root {
-      --bg-card: #FFFFFF;
-      --border-card: #EAE6DF;
-      --divider-color: #7E5F46;
-      --text-header: #84634B;
       --text-category: #84634B;
       --btn-border: #DCD6CD;
       --btn-text: #634E3E;
@@ -27,38 +23,15 @@
 
     body {
       background-color: transparent;
-      padding: 10px;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif;
+      padding: 4px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
       display: flex;
       justify-content: flex-start;
     }
 
     .widget-container {
       width: 100%;
-      max-width: 310px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-card);
-      border-radius: 12px;
-      padding: 18px 20px;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
-    }
-
-    /* Título principal con estilo Serif como Notion */
-    .title {
-      font-family: Lyon-Text, Georgia, "Times New Roman", serif;
-      font-size: 1.35rem;
-      font-weight: 600;
-      color: var(--text-header);
-      margin-bottom: 8px;
-      letter-spacing: -0.2px;
-    }
-
-    /* Línea divisoria */
-    .divider {
-      height: 1px;
-      background-color: var(--divider-color);
-      opacity: 0.8;
-      margin-bottom: 14px;
+      max-width: 320px;
     }
 
     /* Botón Nueva Semana */
@@ -69,12 +42,12 @@
       background: #FFFFFF;
       border: 1px solid var(--btn-border);
       border-radius: 6px;
-      padding: 5px 12px;
+      padding: 4px 10px;
       font-family: Lyon-Text, Georgia, "Times New Roman", serif;
       font-size: 0.85rem;
       color: var(--btn-text);
       cursor: pointer;
-      margin-bottom: 18px;
+      margin-bottom: 14px;
       transition: all 0.15s ease;
     }
 
@@ -91,7 +64,7 @@
 
     /* Secciones Desplegables */
     details {
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     summary {
@@ -113,7 +86,7 @@
     }
 
     summary .arrow {
-      font-size: 0.65rem;
+      font-size: 0.6rem;
       transition: transform 0.15s ease;
       display: inline-block;
     }
@@ -122,12 +95,12 @@
       transform: rotate(90deg);
     }
 
-    /* Lista de tareas y casillas */
+    /* Lista de tareas */
     .task-list {
       display: flex;
       flex-direction: column;
       gap: 6px;
-      padding: 8px 0 4px 18px;
+      padding: 6px 0 2px 16px;
     }
 
     .task-item {
@@ -190,77 +163,92 @@
 <body>
 
   <div class="widget-container">
-    <div class="title">Objetivos semana</div>
-    <div class="divider"></div>
-
     <button class="btn-new-week" onclick="nuevaSemana()">
       <span>+</span> Nueva semana
     </button>
 
     <!-- Sección Estudiar -->
     <details open>
-      <summary><span class="arrow">▼</span> Estudiar</summary>
-      <div class="task-list">
-        <div class="task-item">
-          <input type="checkbox" class="checkbox" onchange="toggleTask(this)">
-          <input type="text" class="task-input" placeholder="Tareas pendientes">
-        </div>
-        <div class="task-item">
-          <input type="checkbox" class="checkbox" onchange="toggleTask(this)">
-          <input type="text" class="task-input" placeholder="Tareas pendientes">
-        </div>
-        <div class="task-item">
-          <input type="checkbox" class="checkbox" onchange="toggleTask(this)">
-          <input type="text" class="task-input" placeholder="Tareas pendientes">
-        </div>
-      </div>
+      <summary><span class="arrow">▶</span> Estudiar</summary>
+      <div class="task-list" id="list-estudiar"></div>
     </details>
 
     <!-- Sección Personal -->
     <details open>
-      <summary><span class="arrow">▼</span> Personal</summary>
-      <div class="task-list">
-        <div class="task-item">
-          <input type="checkbox" class="checkbox" onchange="toggleTask(this)">
-          <input type="text" class="task-input" placeholder="Tareas pendientes">
-        </div>
-        <div class="task-item">
-          <input type="checkbox" class="checkbox" onchange="toggleTask(this)">
-          <input type="text" class="task-input" placeholder="Tareas pendientes">
-        </div>
-        <div class="task-item">
-          <input type="checkbox" class="checkbox" onchange="toggleTask(this)">
-          <input type="text" class="task-input" placeholder="Tareas pendientes">
-        </div>
-      </div>
+      <summary><span class="arrow">▶</span> Personal</summary>
+      <div class="task-list" id="list-personal"></div>
     </details>
   </div>
 
   <script>
-    // Tachar texto al marcar el checkbox
-    function toggleTask(checkbox) {
-      const textInput = checkbox.nextElementSibling;
-      if (checkbox.checked) {
-        textInput.classList.add('completed');
-      } else {
-        textInput.classList.remove('completed');
-      }
+    function createTaskElement() {
+      const item = document.createElement('div');
+      item.className = 'task-item';
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.className = 'checkbox';
+      checkbox.onchange = function() {
+        if (this.checked) {
+          input.classList.add('completed');
+        } else {
+          input.classList.remove('completed');
+        }
+      };
+
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'task-input';
+      input.placeholder = 'Tareas pendientes';
+
+      input.addEventListener('keydown', function(e) {
+        const list = item.parentElement;
+
+        // Enter: Crea y enfoca la siguiente tarea
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const { item: newItem, input: nextInput } = createTaskElement();
+          item.after(newItem);
+          nextInput.focus();
+        }
+
+        // Backspace en campo vacío: Borra la fila si no es la única
+        if (e.key === 'Backspace' && input.value === '' && list.children.length > 1) {
+          e.preventDefault();
+          const prevItem = item.previousElementSibling || item.nextElementSibling;
+          item.remove();
+          if (prevItem) {
+            const prevInput = prevItem.querySelector('.task-input');
+            if (prevInput) prevInput.focus();
+          }
+        }
+      });
+
+      item.appendChild(checkbox);
+      item.appendChild(input);
+      return { item, input };
     }
 
-    // Limpiar casillas y textos al pulsar Nueva semana
+    function addTask(containerId) {
+      const container = document.getElementById(containerId);
+      const { item, input } = createTaskElement();
+      container.appendChild(item);
+      return input;
+    }
+
     function nuevaSemana() {
-      const inputs = document.querySelectorAll('.task-input');
-      const checkboxes = document.querySelectorAll('.checkbox');
+      const listEstudiar = document.getElementById('list-estudiar');
+      const listPersonal = document.getElementById('list-personal');
 
-      inputs.forEach(input => {
-        input.value = '';
-        input.classList.remove('completed');
-      });
+      listEstudiar.innerHTML = '';
+      listPersonal.innerHTML = '';
 
-      checkboxes.forEach(chk => {
-        chk.checked = false;
-      });
+      addTask('list-estudiar');
+      addTask('list-personal');
     }
+
+    // Iniciar con una casilla por sección
+    nuevaSemana();
   </script>
 </body>
 </html>
