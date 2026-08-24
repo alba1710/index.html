@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Widget de Hábitos</title>
+  <title>Resumen Semanal de Hábitos</title>
   <style>
     :root {
       --bg-page: #ffffff;
@@ -14,8 +14,6 @@
       --primary: #865d52;
       --primary-dark: #5e3f37;
       --primary-light: #ab7f74;
-      --circle-inactive: #f2e9e6;
-      --circle-inactive-text: #865d52;
       --text-main: #5e3f37;
       --text-stat: #865d52;
       --bar-bg: #ebdcd8;
@@ -46,7 +44,7 @@
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 14px;
-      padding: clamp(6px, 2.5cqi, 12px);
+      padding: clamp(8px, 2.8cqi, 12px);
       width: 100%;
       max-width: 100%;
     }
@@ -55,8 +53,8 @@
       background: var(--item-bg);
       border: 1px solid var(--item-border);
       border-radius: 10px;
-      padding: clamp(6px, 2.2cqi, 9px);
-      margin-bottom: clamp(5px, 1.8cqi, 7px);
+      padding: clamp(8px, 2.5cqi, 10px);
+      margin-bottom: clamp(6px, 2cqi, 8px);
       overflow: hidden;
     }
 
@@ -68,13 +66,19 @@
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      margin-bottom: clamp(4px, 1.4cqi, 6px);
-      gap: 4px;
+      margin-bottom: clamp(5px, 1.8cqi, 7px);
+      gap: 6px;
     }
 
-    /* Título más grande y visible */
+    .title-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      overflow: hidden;
+    }
+
     .habit-title {
-      font-size: clamp(0.78rem, 4.4cqi, 0.94rem);
+      font-size: clamp(0.78rem, 4.4cqi, 0.92rem);
       font-weight: 700;
       color: var(--text-main);
       white-space: nowrap;
@@ -82,21 +86,41 @@
       text-overflow: ellipsis;
     }
 
+    /* Animación del icono de confeti */
+    .confetti-badge {
+      display: none;
+      font-size: clamp(0.75rem, 3.8cqi, 0.9rem);
+      animation: popConfetti 0.5s ease-out forwards, floatAnim 2s ease-in-out infinite alternate;
+    }
+
+    .confetti-badge.show {
+      display: inline-block;
+    }
+
+    @keyframes popConfetti {
+      0% { transform: scale(0); opacity: 0; }
+      70% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes floatAnim {
+      0% { transform: translateY(0px) rotate(0deg); }
+      100% { transform: translateY(-2px) rotate(8deg); }
+    }
+
     .habit-stat {
-      font-size: clamp(0.62rem, 3.4cqi, 0.74rem);
+      font-size: clamp(0.68rem, 3.6cqi, 0.8rem);
       font-weight: 600;
       color: var(--text-stat);
       white-space: nowrap;
       flex-shrink: 0;
     }
 
-    /* Barra de progreso más gruesa situada arriba de los días */
     .progress-track {
       background: var(--bar-bg);
-      height: 7px;
+      height: 8px;
       border-radius: 999px;
       overflow: hidden;
-      margin-bottom: clamp(6px, 2cqi, 8px);
     }
 
     .progress-fill {
@@ -104,81 +128,11 @@
       height: 100%;
       width: 0%;
       border-radius: 999px;
-      transition: width 0.3s ease;
+      transition: width 0.5s ease;
     }
 
     .progress-fill.completed {
       background: var(--bar-complete);
-    }
-
-    /* Cuadrícula de días situada debajo */
-    .days-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: clamp(2px, 1cqi, 4px);
-      width: 100%;
-    }
-
-    .day-item {
-      display: none;
-    }
-
-    .day-label {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-    }
-
-    .day-circle {
-      width: 100%;
-      max-width: 26px;
-      aspect-ratio: 1 / 1;
-      border-radius: 50%;
-      background: var(--circle-inactive);
-      color: var(--circle-inactive-text);
-      font-size: clamp(0.55rem, 3.3cqi, 0.7rem);
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      user-select: none;
-      transition: all 0.15s ease;
-    }
-
-    .day-circle:hover {
-      background: #ebdcd8;
-    }
-
-    .day-item:checked + .day-circle {
-      background: var(--primary);
-      color: #ffffff;
-      box-shadow: 0 1px 4px rgba(134, 93, 82, 0.35);
-    }
-
-    .footer-action {
-      display: flex;
-      justify-content: center;
-      margin-top: clamp(6px, 2cqi, 10px);
-    }
-
-    .btn-reset {
-      background: transparent;
-      border: 1px solid var(--primary-light);
-      color: var(--primary);
-      font-size: clamp(0.6rem, 3cqi, 0.72rem);
-      font-weight: 600;
-      padding: 0.2rem 0.6rem;
-      border-radius: 999px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-reset:hover {
-      background: var(--primary);
-      color: #ffffff;
-      border-color: var(--primary);
     }
   </style>
 </head>
@@ -186,110 +140,78 @@
 
   <div class="habit-widget">
     <div id="habits-list"></div>
-
-    <div class="footer-action">
-      <button class="btn-reset" onclick="resetWeek()">Reiniciar semana</button>
-    </div>
   </div>
 
   <script>
-    const habitsData = [
-      { id: "leer", name: "Leer 20 min", target: 5 },
-      { id: "comer", name: "Comer sano", target: 6 },
-      { id: "ejercicio", name: "Ejercicio", target: 5 },
-      { id: "agua", name: "2 L agua", target: 7 }
+    const CLOUDFLARE_WORKER_URL = "https://habittracker.albaadamerojas.workers.dev/";
+
+    const habitsConfig = [
+      { key: "comerSano", name: "Comer sano", target: 6 },
+      { key: "leer", name: "Leer", target: 4 },
+      { key: "agua", name: "2 L agua", target: 7 },
+      { key: "pasos", name: "Pasos", target: 5 }
     ];
 
-    const days = ["L", "M", "X", "J", "V", "S", "D"];
     const container = document.getElementById("habits-list");
 
-    function getStoredData() {
-      const saved = localStorage.getItem("weekly_habits_tracker");
-      return saved ? JSON.parse(saved) : {};
-    }
-
-    function saveState(state) {
-      localStorage.setItem("weekly_habits_tracker", JSON.stringify(state));
-    }
-
-    function renderWidget() {
-      const state = getStoredData();
+    function renderInitial() {
       container.innerHTML = "";
-
-      habitsData.forEach((habit) => {
-        const habitChecked = state[habit.id] || [];
-        const count = habitChecked.length;
-        const percent = Math.min(100, Math.round((count / habit.target) * 100));
-
+      habitsConfig.forEach(habit => {
         const card = document.createElement("div");
         card.className = "habit-card";
-
-        const daysHtml = days.map((day, dIdx) => {
-          const isChecked = habitChecked.includes(dIdx) ? "checked" : "";
-          return `
-            <label class="day-label">
-              <input type="checkbox" class="day-item" id="chk_${habit.id}_${dIdx}" 
-                     ${isChecked} onchange="toggleDay('${habit.id}', ${dIdx})">
-              <span class="day-circle">${day}</span>
-            </label>
-          `;
-        }).join("");
-
-        const isCompletedClass = count >= habit.target ? "completed" : "";
-
-        // Estructura: Título y stats -> Barra de progreso gruesa -> Días debajo
         card.innerHTML = `
           <div class="habit-top">
-            <span class="habit-title">${habit.name}</span>
-            <span class="habit-stat" id="stat_${habit.id}">${count}/${habit.target} (${percent}%)</span>
+            <div class="title-wrapper">
+              <span class="habit-title">${habit.name}</span>
+              <span class="confetti-badge" id="confetti_${habit.key}">🎉</span>
+            </div>
+            <span class="habit-stat" id="stat_${habit.key}">- / ${habit.target} d</span>
           </div>
           <div class="progress-track">
-            <div class="progress-fill ${isCompletedClass}" id="bar_${habit.id}" style="width: ${percent}%;"></div>
+            <div class="progress-fill" id="bar_${habit.key}" style="width: 0%;"></div>
           </div>
-          <div class="days-grid">${daysHtml}</div>
         `;
         container.appendChild(card);
       });
     }
 
-    function toggleDay(habitId, dayIndex) {
-      const state = getStoredData();
-      if (!state[habitId]) state[habitId] = [];
+    function updateUI(data) {
+      habitsConfig.forEach(habit => {
+        const count = data[habit.key] !== undefined ? data[habit.key] : 0;
+        const percent = Math.min(100, Math.round((count / habit.target) * 100));
 
-      const index = state[habitId].indexOf(dayIndex);
-      if (index === -1) {
-        state[habitId].push(dayIndex);
-      } else {
-        state[habitId].splice(index, 1);
-      }
+        const statEl = document.getElementById(`stat_${habit.key}`);
+        const barEl = document.getElementById(`bar_${habit.key}`);
+        const confettiEl = document.getElementById(`confetti_${habit.key}`);
 
-      saveState(state);
+        if (statEl && barEl) {
+          statEl.textContent = `${count} / ${habit.target} d (${percent}%)`;
+          barEl.style.width = `${percent}%`;
 
-      const habit = habitsData.find(h => h.id === habitId);
-      const count = state[habitId].length;
-      const percent = Math.min(100, Math.round((count / habit.target) * 100));
+          if (count >= habit.target) {
+            barEl.classList.add("completed");
+            if (confettiEl) confettiEl.classList.add("show");
+          } else {
+            barEl.classList.remove("completed");
+            if (confettiEl) confettiEl.classList.remove("show");
+          }
+        }
+      });
+    }
 
-      const bar = document.getElementById(`bar_${habitId}`);
-      const stat = document.getElementById(`stat_${habitId}`);
-
-      stat.textContent = `${count}/${habit.target} (${percent}%)`;
-      bar.style.width = `${percent}%`;
-
-      if (count >= habit.target) {
-        bar.classList.add("completed");
-      } else {
-        bar.classList.remove("completed");
+    async function fetchNotionHabits() {
+      try {
+        const response = await fetch(CLOUDFLARE_WORKER_URL);
+        if (!response.ok) throw new Error("Error en la respuesta del Worker");
+        const data = await response.json();
+        updateUI(data);
+      } catch (error) {
+        console.error("Error al cargar hábitos desde Notion:", error);
       }
     }
 
-    function resetWeek() {
-      if (confirm("¿Deseas reiniciar las casillas de toda la semana?")) {
-        localStorage.removeItem("weekly_habits_tracker");
-        renderWidget();
-      }
-    }
-
-    renderWidget();
+    renderInitial();
+    fetchNotionHabits();
   </script>
 </body>
 </html>
