@@ -21,6 +21,18 @@
       padding: 0;
     }
 
+    /* Ocultar barra de scroll en todos los navegadores */
+    html, body {
+      overflow-y: hidden;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    html::-webkit-scrollbar, 
+    body::-webkit-scrollbar {
+      display: none;
+    }
+
     body {
       background-color: transparent;
       padding: 4px;
@@ -204,7 +216,6 @@
       input.addEventListener('keydown', function(e) {
         const list = item.parentElement;
 
-        // Enter: Crea y enfoca la siguiente tarea
         if (e.key === 'Enter') {
           e.preventDefault();
           const { item: newItem, input: nextInput } = createTaskElement();
@@ -212,7 +223,6 @@
           nextInput.focus();
         }
 
-        // Backspace en campo vacío: Borra la fila si no es la única
         if (e.key === 'Backspace' && input.value === '' && list.children.length > 1) {
           e.preventDefault();
           const prevItem = item.previousElementSibling || item.nextElementSibling;
@@ -247,7 +257,6 @@
       addTask('list-personal');
     }
 
-    // Iniciar con una casilla por sección
     nuevaSemana();
   </script>
 </body>
