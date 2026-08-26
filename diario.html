@@ -3,123 +3,155 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Horario Diario</title>
+  <title>Horario Diario Notion</title>
   <style>
     :root {
       --brown-text: #735647;
+      --brown-badge-bg: #f5eee8;
       --purple-border: #7e22ce;
-      --border-color: #d1c7bd;
-      --bg: #ffffff;
+      --text-muted: #ad9e95;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: "Georgia", serif;
+      font-family: "Lyon-Text", Georgia, ui-serif, Cambria, "Times New Roman", Times, serif;
     }
 
     body {
-      background-color: var(--bg);
+      background-color: transparent;
       color: var(--brown-text);
+      padding: 12px;
+      width: 100%;
       display: flex;
       justify-content: center;
-      padding: 20px;
     }
 
     .widget-container {
       width: 100%;
-      max-width: 440px;
+      max-width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 14px;
     }
 
-    /* Encabezado con marco morado y navegación */
+    /* Encabezado con marco morado responsive */
     .header-nav {
       display: flex;
       align-items: center;
       justify-content: space-between;
       border: 1.5px solid var(--purple-border);
       padding: 6px 12px;
+      border-radius: 3px;
       background: transparent;
     }
 
+    /* Botones circulares marrones con flechas blancas */
     .nav-btn {
-      background: none;
+      background-color: var(--brown-text);
       border: none;
-      color: var(--brown-text);
-      font-size: 24px;
+      color: #ffffff;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      line-height: 1;
-      padding: 0 8px;
-      font-weight: 400;
-      transition: opacity 0.2s;
+      flex-shrink: 0;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .nav-btn svg {
+      width: 10px;
+      height: 10px;
+      fill: #ffffff;
     }
 
     .nav-btn:hover {
-      opacity: 0.6;
+      opacity: 0.85;
+      transform: scale(1.05);
+    }
+
+    .nav-btn:active {
+      transform: scale(0.95);
     }
 
     .date-title {
-      font-size: 22px;
-      font-weight: bold;
+      font-size: clamp(16px, 3.8vw, 22px);
+      font-weight: 700;
       color: var(--brown-text);
       text-align: center;
       flex-grow: 1;
-      letter-spacing: 0.2px;
+      padding: 0 8px;
     }
 
-    /* Tabla de Horas y Tareas */
+    /* Lista adaptable */
     .schedule-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 6px;
+      width: 100%;
     }
 
     .schedule-row {
       display: grid;
-      grid-template-columns: 65px 1fr 30px;
+      grid-template-columns: auto 1fr auto;
       align-items: center;
-      gap: 12px;
-      min-height: 28px;
+      gap: 10px;
+      width: 100%;
+      min-height: 32px;
     }
 
-    .time-col {
-      font-size: 13.5px;
-      font-weight: bold;
+    /* Fondo individual clarito para las horas */
+    .time-badge {
+      background-color: var(--brown-badge-bg);
       color: var(--brown-text);
+      font-size: 13.5px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 6px;
+      min-width: 58px;
       text-align: center;
+      flex-shrink: 0;
     }
 
+    /* Entrada de texto limpia sin rayas */
     .task-col {
       display: flex;
       align-items: center;
+      width: 100%;
     }
 
     .task-input {
       width: 100%;
       border: none;
-      border-bottom: 1px solid var(--brown-text);
       background: transparent;
       outline: none;
       color: var(--brown-text);
       font-family: inherit;
-      font-size: 13.5px;
-      padding: 2px 4px;
+      font-size: 14px;
+      padding: 4px 6px;
     }
 
-    /* Casilla de verificación redondeada */
+    .task-input::placeholder {
+      color: #cfc4bb;
+      font-style: italic;
+    }
+
+    /* Checkbox marrón redondeado */
     .check-col {
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
 
     .custom-checkbox {
       appearance: none;
-      width: 22px;
-      height: 22px;
+      width: 21px;
+      height: 21px;
       border: 2px solid var(--brown-text);
       border-radius: 6px;
       cursor: pointer;
@@ -138,13 +170,18 @@
     .custom-checkbox:checked::after {
       content: '✓';
       color: #ffffff;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: bold;
       font-family: sans-serif;
     }
 
     .schedule-row.completed .task-input {
       text-decoration: line-through;
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
+
+    .schedule-row.completed .time-badge {
       opacity: 0.6;
     }
   </style>
@@ -152,14 +189,16 @@
 <body>
 
   <div class="widget-container">
-    <!-- Barra superior de navegación por día -->
     <div class="header-nav">
-      <button class="nav-btn" onclick="changeDay(-1)">&lt;</button>
-      <div class="date-title" id="dateTitle">Miércoles 26 Agosto</div>
-      <button class="nav-btn" onclick="changeDay(1)">&gt;</button>
+      <button class="nav-btn" onclick="changeDay(-1)" title="Día anterior">
+        <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      </button>
+      <div class="date-title" id="dateTitle"></div>
+      <button class="nav-btn" onclick="changeDay(1)" title="Día siguiente">
+        <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+      </button>
     </div>
 
-    <!-- Lista de 8:00 a 21:00 -->
     <div class="schedule-list" id="scheduleList"></div>
   </div>
 
@@ -203,11 +242,12 @@
         row.className = `schedule-row ${isChecked ? 'completed' : ''}`;
 
         row.innerHTML = `
-          <div class="time-col">${timeStr}</div>
+          <div class="time-badge">${timeStr}</div>
           <div class="task-col">
             <input 
               type="text" 
               class="task-input" 
+              placeholder="Añadir tarea..."
               value="${savedText}" 
               oninput="saveTask('${taskKey}', this.value)"
             />
