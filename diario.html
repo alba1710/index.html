@@ -9,11 +9,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --brown-title: #6e4f3a;
-      --brown-light: #8d705c;
-      --brown-badge-bg: #f5eee8;
+      --taupe-main: #937b74;
+      --taupe-badge-bg: #f5efed;
       --task-text: #1a1a1a;
-      --text-muted: #9e938b;
+      --text-muted: #b8a8a3;
     }
 
     * {
@@ -25,8 +24,8 @@
 
     body {
       background-color: transparent;
-      color: var(--brown-title);
-      padding: 10px;
+      color: var(--taupe-main);
+      padding: 8px 6px;
       width: 100%;
       display: flex;
       justify-content: center;
@@ -36,25 +35,25 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       width: 100%;
     }
 
-    /* Encabezado centrado sin recuadro */
+    /* Encabezado compacto en una sola línea */
     .header-nav {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 14px;
-      padding: 4px 0;
+      gap: 10px;
+      padding: 2px 0;
       width: 100%;
     }
 
     .nav-btn {
-      background-color: var(--brown-light);
+      background-color: var(--taupe-main);
       border: none;
-      width: 22px;
-      height: 22px;
+      width: 19px;
+      height: 19px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -65,8 +64,8 @@
     }
 
     .nav-btn svg {
-      width: 9px;
-      height: 9px;
+      width: 8px;
+      height: 8px;
       fill: #ffffff;
     }
 
@@ -76,44 +75,46 @@
     }
 
     .date-title {
-      font-size: 18px;
+      font-size: 13.5px;
       font-weight: 700;
-      color: var(--brown-title);
+      color: var(--taupe-main);
       letter-spacing: 0.2px;
       text-align: center;
+      white-space: nowrap;
+      user-select: none;
     }
 
-    /* Lista alineada y compacta */
+    /* Lista compacta alineada */
     .schedule-list {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
       width: 100%;
       align-items: center;
     }
 
     .schedule-row {
       display: grid;
-      grid-template-columns: 52px 145px 22px;
+      grid-template-columns: 50px 140px 20px;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      min-height: 28px;
+      min-height: 26px;
     }
 
-    /* Fondo suave individual para las horas */
+    /* Fondo individual para las horas en el tono taupe suave */
     .time-badge {
-      background-color: var(--brown-badge-bg);
-      color: var(--brown-title);
-      font-size: 13px;
+      background-color: var(--taupe-badge-bg);
+      color: var(--taupe-main);
+      font-size: 12px;
       font-weight: 700;
-      padding: 3px 0;
+      padding: 2px 0;
       border-radius: 5px;
       text-align: center;
       line-height: 1.2;
     }
 
-    /* Tarea en color negro y espacio acotado a ~2 palabras */
+    /* Campo de texto en negro */
     .task-col {
       display: flex;
       align-items: center;
@@ -126,17 +127,17 @@
       outline: none;
       color: var(--task-text);
       font-family: inherit;
-      font-size: 14px;
+      font-size: 13.5px;
       padding: 2px 4px;
-      line-height: 1.3;
+      line-height: 1.2;
     }
 
     .task-input::placeholder {
-      color: #b5aba3;
+      color: #c9bdb9;
       font-style: italic;
     }
 
-    /* Checkbox pegado a la tarea */
+    /* Checkbox en el tono exacto de la paleta */
     .check-col {
       display: flex;
       align-items: center;
@@ -145,9 +146,9 @@
 
     .custom-checkbox {
       appearance: none;
-      width: 18px;
-      height: 18px;
-      border: 1.6px solid var(--brown-light);
+      width: 17px;
+      height: 17px;
+      border: 1.5px solid var(--taupe-main);
       border-radius: 4px;
       cursor: pointer;
       outline: none;
@@ -159,14 +160,14 @@
     }
 
     .custom-checkbox:checked {
-      background-color: var(--brown-light);
-      border-color: var(--brown-light);
+      background-color: var(--taupe-main);
+      border-color: var(--taupe-main);
     }
 
     .custom-checkbox:checked::after {
       content: '✓';
       color: #ffffff;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: bold;
       font-family: sans-serif;
     }
