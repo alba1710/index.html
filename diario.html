@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Horario Diario</title>
+  <style>
+    :root {
+      --brown-text: #735647;
+      --purple-border: #7e22ce;
+      --border-color: #d1c7bd;
+      --bg: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Georgia", serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--brown-text);
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .widget-container {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Encabezado con marco morado y navegación */
+    .header-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1.5px solid var(--purple-border);
+      padding: 6px 12px;
+      background: transparent;
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--brown-text);
+      font-size: 24px;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0 8px;
+      font-weight: 400;
+      transition: opacity 0.2s;
+    }
+
+    .nav-btn:hover {
+      opacity: 0.6;
+    }
+
+    .date-title {
+      font-size: 22px;
+      font-weight: bold;
+      color: var(--brown-text);
+      text-align: center;
+      flex-grow: 1;
+      letter-spacing: 0.2px;
+    }
+
+    /* Tabla de Horas y Tareas */
+    .schedule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .schedule-row {
+      display: grid;
+      grid-template-columns: 65px 1fr 30px;
+      align-items: center;
+      gap: 12px;
+      min-height: 28px;
+    }
+
+    .time-col {
+      font-size: 13.5px;
+      font-weight: bold;
+      color: var(--brown-text);
+      text-align: center;
+    }
+
+    .task-col {
+      display: flex;
+      align-items: center;
+    }
+
+    .task-input {
+      width: 100%;
+      border: none;
+      border-bottom: 1px solid var(--brown-text);
+      background: transparent;
+      outline: none;
+      color: var(--brown-text);
+      font-family: inherit;
+      font-size: 13.5px;
+      padding: 2px 4px;
+    }
+
+    /* Casilla de verificación redondeada */
+    .check-col {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .custom-checkbox {
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--brown-text);
+      border-radius: 6px;
+      cursor: pointer;
+      outline: none;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+
+    .custom-checkbox:checked {
+      background-color: var(--brown-text);
+    }
+
+    .custom-checkbox:checked::after {
+      content: '✓';
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: bold;
+      font-family: sans-serif;
+    }
+
+    .schedule-row.completed .task-input {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="widget-container">
+    <!-- Barra superior de navegación por día -->
+    <div class="header-nav">
+      <button class="nav-btn" onclick="changeDay(-1)">&lt;</button>
+      <div class="date-title" id="dateTitle">Miércoles 26 Agosto</div>
+      <button class="nav-btn" onclick="changeDay(1)">&gt;</button>
+    </div>
+
+    <!-- Lista de 8:00 a 21:00 -->
+    <div class="schedule-list" id="scheduleList"></div>
+  </div>
+
+  <script>
+    let currentDate = new Date();
+    const startHour = 8;
+    const endHour = 21;
+
+    const daysMap = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const monthsMap = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+    function getDateKey(d) {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function renderHeader() {
+      const dayName = daysMap[currentDate.getDay()];
+      const dayNumber = currentDate.getDate();
+      const monthName = monthsMap[currentDate.getMonth()];
+      document.getElementById('dateTitle').innerText = `${dayName} ${dayNumber} ${monthName}`;
+    }
+
+    function renderSchedule() {
+      renderHeader();
+      const listContainer = document.getElementById('scheduleList');
+      listContainer.innerHTML = '';
+      const dateKey = getDateKey(currentDate);
+
+      for (let h = startHour; h <= endHour; h++) {
+        const timeStr = `${h}:00`;
+        const taskKey = `plan_${dateKey}_${timeStr}`;
+        const checkKey = `done_${dateKey}_${timeStr}`;
+
+        const savedText = localStorage.getItem(taskKey) || '';
+        const isChecked = localStorage.getItem(checkKey) === 'true';
+
+        const row = document.createElement('div');
+        row.className = `schedule-row ${isChecked ? 'completed' : ''}`;
+
+        row.innerHTML = `
+          <div class="time-col">${timeStr}</div>
+          <div class="task-col">
+            <input 
+              type="text" 
+              class="task-input" 
+              value="${savedText}" 
+              oninput="saveTask('${taskKey}', this.value)"
+            />
+          </div>
+          <div class="check-col">
+            <input 
+              type="checkbox" 
+              class="custom-checkbox" 
+              ${isChecked ? 'checked' : ''} 
+              onchange="toggleCheck('${checkKey}', this, this.parentElement.parentElement)"
+            />
+          </div>
+        `;
+
+        listContainer.appendChild(row);
+      }
+    }
+
+    function saveTask(key, value) {
+      localStorage.setItem(key, value);
+    }
+
+    function toggleCheck(key, checkbox, rowElement) {
+      localStorage.setItem(key, checkbox.checked);
+      if (checkbox.checked) {
+        rowElement.classList.add('completed');
+      } else {
+        rowElement.classList.remove('completed');
+      }
+    }
+
+    function changeDay(delta) {
+      currentDate.setDate(currentDate.getDate() + delta);
+      renderSchedule();
+    }
+
+    renderSchedule();
+  </script>
+</body>
+</html>
