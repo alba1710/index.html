@@ -6,10 +6,10 @@
   <title>Horario Diario Notion</title>
   <style>
     :root {
-      --brown-text: #735647;
-      --brown-badge-bg: #f5eee8;
-      --purple-border: #7e22ce;
-      --text-muted: #ad9e95;
+      --brown-text: #6b5344;
+      --brown-light: #967863;
+      --brown-badge-bg: #f7f1eb;
+      --text-muted: #b5a89f;
     }
 
     * {
@@ -22,7 +22,7 @@
     body {
       background-color: transparent;
       color: var(--brown-text);
-      padding: 12px;
+      padding: 6px 8px;
       width: 100%;
       display: flex;
       justify-content: center;
@@ -30,30 +30,26 @@
 
     .widget-container {
       width: 100%;
-      max-width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 8px;
     }
 
-    /* Encabezado con marco morado responsive */
+    /* Encabezado sin bordes, limpio y centrado */
     .header-nav {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      border: 1.5px solid var(--purple-border);
-      padding: 6px 12px;
-      border-radius: 3px;
-      background: transparent;
+      justify-content: center;
+      gap: 12px;
+      padding: 2px 0 6px 0;
     }
 
-    /* Botones circulares marrones con flechas blancas */
+    /* Flechas circulares en marrón más claro */
     .nav-btn {
-      background-color: var(--brown-text);
+      background-color: var(--brown-light);
       border: none;
-      color: #ffffff;
-      width: 24px;
-      height: 24px;
+      width: 19px;
+      height: 19px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -64,60 +60,54 @@
     }
 
     .nav-btn svg {
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       fill: #ffffff;
     }
 
     .nav-btn:hover {
-      opacity: 0.85;
+      opacity: 0.8;
       transform: scale(1.05);
     }
 
-    .nav-btn:active {
-      transform: scale(0.95);
-    }
-
     .date-title {
-      font-size: clamp(16px, 3.8vw, 22px);
+      font-size: 15px;
       font-weight: 700;
       color: var(--brown-text);
+      letter-spacing: 0.1px;
       text-align: center;
-      flex-grow: 1;
-      padding: 0 8px;
     }
 
-    /* Lista adaptable */
+    /* Lista compacta */
     .schedule-list {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 3px;
       width: 100%;
     }
 
     .schedule-row {
       display: grid;
-      grid-template-columns: auto 1fr auto;
+      grid-template-columns: 46px 1fr 20px;
       align-items: center;
-      gap: 10px;
+      gap: 6px;
       width: 100%;
-      min-height: 32px;
+      min-height: 24px;
     }
 
-    /* Fondo individual clarito para las horas */
+    /* Fondo individual pequeño para las horas */
     .time-badge {
       background-color: var(--brown-badge-bg);
       color: var(--brown-text);
-      font-size: 13.5px;
+      font-size: 11px;
       font-weight: 700;
-      padding: 4px 8px;
-      border-radius: 6px;
-      min-width: 58px;
+      padding: 2px 0;
+      border-radius: 4px;
       text-align: center;
       flex-shrink: 0;
+      line-height: 1.2;
     }
 
-    /* Entrada de texto limpia sin rayas */
     .task-col {
       display: flex;
       align-items: center;
@@ -131,16 +121,17 @@
       outline: none;
       color: var(--brown-text);
       font-family: inherit;
-      font-size: 14px;
-      padding: 4px 6px;
+      font-size: 11.5px;
+      padding: 2px 4px;
+      line-height: 1.2;
     }
 
     .task-input::placeholder {
-      color: #cfc4bb;
+      color: #cfc5be;
       font-style: italic;
     }
 
-    /* Checkbox marrón redondeado */
+    /* Casilla de check en tono marrón suave */
     .check-col {
       display: flex;
       align-items: center;
@@ -150,10 +141,10 @@
 
     .custom-checkbox {
       appearance: none;
-      width: 21px;
-      height: 21px;
-      border: 2px solid var(--brown-text);
-      border-radius: 6px;
+      width: 16px;
+      height: 16px;
+      border: 1.5px solid var(--brown-light);
+      border-radius: 4px;
       cursor: pointer;
       outline: none;
       background: transparent;
@@ -164,13 +155,14 @@
     }
 
     .custom-checkbox:checked {
-      background-color: var(--brown-text);
+      background-color: var(--brown-light);
+      border-color: var(--brown-light);
     }
 
     .custom-checkbox:checked::after {
       content: '✓';
       color: #ffffff;
-      font-size: 13px;
+      font-size: 10px;
       font-weight: bold;
       font-family: sans-serif;
     }
@@ -178,11 +170,11 @@
     .schedule-row.completed .task-input {
       text-decoration: line-through;
       color: var(--text-muted);
-      opacity: 0.7;
+      opacity: 0.65;
     }
 
     .schedule-row.completed .time-badge {
-      opacity: 0.6;
+      opacity: 0.5;
     }
   </style>
 </head>
