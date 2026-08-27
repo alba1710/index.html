@@ -10,8 +10,9 @@
   <style>
     :root {
       --taupe-main: #937b74;
+      --taupe-dark: #5c4740;
       --taupe-badge-bg: #f5efed;
-      --task-text: #1a1a1a;
+      --task-text: #111111;
       --text-muted: #b8a8a3;
     }
 
@@ -24,36 +25,37 @@
 
     body {
       background-color: transparent;
-      color: var(--taupe-main);
-      padding: 8px 6px;
+      color: var(--taupe-dark);
+      padding: 10px 0;
       width: 100%;
       display: flex;
       justify-content: center;
+      align-items: flex-start;
     }
 
     .widget-container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
-      width: 100%;
+      width: 232px;
+      margin: 0 auto;
+      gap: 12px;
     }
 
-    /* Encabezado compacto en una sola línea */
+    /* Encabezado con ancho fijo para que las flechas no se muevan */
     .header-nav {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 2px 0;
+      justify-content: space-between;
       width: 100%;
+      padding-bottom: 2px;
     }
 
     .nav-btn {
       background-color: var(--taupe-main);
       border: none;
-      width: 19px;
-      height: 19px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -77,47 +79,50 @@
     .date-title {
       font-size: 13.5px;
       font-weight: 700;
-      color: var(--taupe-main);
+      color: var(--taupe-dark);
       letter-spacing: 0.2px;
       text-align: center;
       white-space: nowrap;
       user-select: none;
+      flex: 1;
+      padding: 0 4px;
     }
 
-    /* Lista compacta alineada */
+    /* Lista alineada y con mayor separación vertical entre horas */
     .schedule-list {
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 8px;
       width: 100%;
-      align-items: center;
     }
 
     .schedule-row {
       display: grid;
-      grid-template-columns: 50px 140px 20px;
+      grid-template-columns: 48px 146px 20px;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
-      min-height: 26px;
+      gap: 9px;
+      width: 100%;
+      min-height: 30px;
     }
 
-    /* Fondo individual para las horas en el tono taupe suave */
+    /* Horas con texto más oscuro */
     .time-badge {
       background-color: var(--taupe-badge-bg);
-      color: var(--taupe-main);
+      color: var(--taupe-dark);
       font-size: 12px;
       font-weight: 700;
-      padding: 2px 0;
+      padding: 4px 0;
       border-radius: 5px;
       text-align: center;
-      line-height: 1.2;
+      line-height: 1;
+      user-select: none;
     }
 
-    /* Campo de texto en negro */
+    /* Espacio amplio de altura y padding inferior para evitar cortes en letras como g, p, j, y */
     .task-col {
       display: flex;
       align-items: center;
+      overflow: visible;
     }
 
     .task-input {
@@ -128,8 +133,8 @@
       color: var(--task-text);
       font-family: inherit;
       font-size: 13.5px;
-      padding: 2px 4px;
-      line-height: 1.2;
+      line-height: 1.5;
+      padding: 2px 2px 4px 2px;
     }
 
     .task-input::placeholder {
@@ -137,7 +142,7 @@
       font-style: italic;
     }
 
-    /* Checkbox en el tono exacto de la paleta */
+    /* Casilla de check */
     .check-col {
       display: flex;
       align-items: center;
@@ -146,9 +151,9 @@
 
     .custom-checkbox {
       appearance: none;
-      width: 17px;
-      height: 17px;
-      border: 1.5px solid var(--taupe-main);
+      width: 18px;
+      height: 18px;
+      border: 1.6px solid var(--taupe-main);
       border-radius: 4px;
       cursor: pointer;
       outline: none;
@@ -167,7 +172,7 @@
     .custom-checkbox:checked::after {
       content: '✓';
       color: #ffffff;
-      font-size: 10px;
+      font-size: 10.5px;
       font-weight: bold;
       font-family: sans-serif;
     }
@@ -178,7 +183,7 @@
     }
 
     .schedule-row.completed .time-badge {
-      opacity: 0.55;
+      opacity: 0.6;
     }
   </style>
 </head>
